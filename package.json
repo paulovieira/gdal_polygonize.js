@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "commander": "^2.9.0",
+    "shelljs": "^0.6.0"
+  }
+}
