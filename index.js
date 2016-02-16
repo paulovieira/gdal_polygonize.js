@@ -243,7 +243,7 @@ var ogrinfo = "";
 if(options.round>=0 && options.round<1){
     ogrinfo = `
 ogrinfo ${ outputVector } -sql \"ALTER TABLE ${ options.output.name } ADD COLUMN ${ options.fieldname } float\"; \
-ogrinfo ${ outputVector } -sql \"UPDATE ${ options.output.name } SET ${ options.fieldname }=${ options.fieldnameTemp }*1.0/${ precisionFactor }*1.0\" -dialect SQLite; \
+ogrinfo ${ outputVector } -sql \"UPDATE ${ options.output.name } SET ${ options.fieldname }=${ options.fieldnameTemp }*1.0/${ precisionFactor }\" -dialect SQLite; \
 ogrinfo ${ outputVector } -sql \"ALTER TABLE ${ options.output.name } DROP COLUMN ${ options.fieldnameTemp }\";
     `;
 }
