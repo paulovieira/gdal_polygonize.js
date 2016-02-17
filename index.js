@@ -196,7 +196,7 @@ if(options.quiet){
 }
 gdal_polygonize_py += " \"" + Path.format(options.rasterTemp) + "\"";
 
-var outputVector = Path.join(options.output.dir, options.output.name, options.output.name + options.output.ext);
+var outputVector = Path.join(options.output.dir, options.output.name + options.output.ext);
 gdal_polygonize_py += " \"" + outputVector + "\"";
 gdal_polygonize_py += " \"" + options.layer + "\"";
 gdal_polygonize_py += " \"" + options.fieldnameTemp + "\"";
@@ -222,14 +222,12 @@ if(output.stderr){
 
 }
 
-Shell.mkdir("-p", Path.join(options.output.dir, options.output.name));
-Shell.rm("-rf", Path.join(options.output.dir, options.output.name, options.output.name + "*"));
+Shell.rm("-rf", Path.join(options.output.dir, options.output.name + "*"));
 
-console.log("[gdal_polygonize.js] Creating the vector with gdal_poligonize.py...");
+console.log("[gdal_polygonize.js] Creating the vector with gdal_polygonize.py...");
 //console.log(gdal_polygonize_py)
 
-gdal_polygonize_py = gdal_polygonize_py.trim();
-output = Shell.exec(gdal_polygonize_py);
+output = Shell.exec(gdal_polygonize_py.trim());
 
 if(output.stderr){
     console.error(Chalk.red(`\n  error: ${ output.stderr } \n`));
