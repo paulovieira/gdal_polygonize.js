@@ -5,7 +5,6 @@ var Shell = require("shelljs");
 var Chalk = require("chalk");
 var program = require("commander");
 
-
 var internals = {};
 
 program
@@ -135,7 +134,7 @@ options.rasterTemp.base = options.input.name + "-" + random + options.input.ext;
 
 options.fieldnameTemp = "temp_" + random.substring(0,3);
 
-console.log(options);
+//console.log(options);
 
 
 
@@ -147,8 +146,8 @@ if(options.round>=1){
 
     gdal_calc_py = `
 gdal_calc.py --overwrite --creation-option=\"COMPRESS=LZW\" \
-    -A ${ Path.format(options.input) } \
-    --outfile=${ Path.format(options.rasterTemp) } \
+    -A \"${ Path.format(options.input) }\" \
+    --outfile=\"${ Path.format(options.rasterTemp) }\" \
     --calc=\"1.0*${ options.round }*floor((1.0/${ options.round })*A)\"
     `;
 }
@@ -157,8 +156,8 @@ gdal_calc.py --overwrite --creation-option=\"COMPRESS=LZW\" \
 else if(options.round===0){
     gdal_calc_py = `
 gdal_calc.py --overwrite --creation-option=\"COMPRESS=LZW\" \
-    -A ${ Path.format(options.input) } \
-    --outfile=${ Path.format(options.rasterTemp) } \
+    -A \"${ Path.format(options.input) }\" \
+    --outfile=\"${ Path.format(options.rasterTemp) }\" \
     --calc=\"1.0*${ precisionFactor }*A\"
     `;
 }
@@ -168,8 +167,8 @@ gdal_calc.py --overwrite --creation-option=\"COMPRESS=LZW\" \
 else{
         gdal_calc_py = `
 gdal_calc.py --overwrite --creation-option=\"COMPRESS=LZW\" \
-    -A ${ Path.format(options.input) } \
-    --outfile=${ Path.format(options.rasterTemp) } \
+    -A \"${ Path.format(options.input) }\" \
+    --outfile=\"${ Path.format(options.rasterTemp) }\" \
     --calc=\"1.0*${ options.round }*floor((1.0/${ options.round })*A)*${ precisionFactor }\"
         `;
 }
@@ -206,7 +205,7 @@ gdal_polygonize_py += " \"" + options.fieldnameTemp + "\"";
 
 
 console.log("==============================")
-console.log("[gdal_polygonize.js] Creating the temporary raster with gdal_calc.py...");
+console.log(Chalk.green("[gdal_polygonize.js]") + " Creating the temporary raster with gdal_calc.py...");
 
 gdal_calc_py = gdal_calc_py.trim();
 var output = Shell.exec(gdal_calc_py);
@@ -224,7 +223,7 @@ if(output.stderr){
 
 Shell.rm("-rf", Path.join(options.output.dir, options.output.name + "*"));
 
-console.log("[gdal_polygonize.js] Creating the vector with gdal_polygonize.py...");
+console.log(Chalk.green("[gdal_polygonize.js]") + " Creating the vector with gdal_polygonize.py...");
 //console.log(gdal_polygonize_py)
 
 output = Shell.exec(gdal_polygonize_py.trim());
@@ -233,10 +232,12 @@ if(output.stderr){
     console.error(Chalk.red(`\n  error: ${ output.stderr } \n`));
     process.exit(1);    
 }
+
 Shell.rm("-rf", Path.format(options.rasterTemp));
 
-console.log("[gdal_polygonize.js] Adjusting the values in the output shapefile with ogrinfo...");
+console.log(Chalk.green("[gdal_polygonize.js]") + " Adjusting the values in the output shapefile with ogrinfo...");
 
+console.log("TODO: remove underscores ", options.output.name)
 var ogrinfo = "";
 if(options.round>=0 && options.round<1){
     ogrinfo = `
@@ -263,4 +264,4 @@ ogrinfo = ogrinfo.trim();
 // }
 
 
-console.log(Chalk.green("[gdal_polygonize.js] All done!"));
+console.log(Chalk.green("[gdal_polygonize.js]") + " All done!");
