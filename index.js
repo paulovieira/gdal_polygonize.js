@@ -73,6 +73,15 @@ if(!Shell.test("-f", program[argumentName])){
     process.exit(1);
 }
 
+// makesure the output argument doesn't have dots (in the name)
+
+var argumentName = "output"
+if(Path.parse(program[argumentName]).name.indexOf(".")!==-1){
+    console.error(Chalk.red(`\n  error: argument ${ argumentName } can't have dots in the vector file name \n`));
+    process.exit(1);
+}
+
+
 // verify if the connectedness argument has a valid value
 
 var argumentName = "connectedness"
@@ -237,7 +246,7 @@ Shell.rm("-rf", Path.format(options.rasterTemp));
 
 console.log(Chalk.green("[gdal_polygonize.js]") + " Adjusting the values in the output shapefile with ogrinfo...");
 
-console.log("TODO: remove underscores ", options.output.name)
+
 var ogrinfo = "";
 if(options.round>=0 && options.round<1){
     ogrinfo = `
