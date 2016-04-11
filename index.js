@@ -217,6 +217,8 @@ console.log("==============================")
 console.log(Chalk.green("[gdal_polygonize.js]") + " Creating the temporary raster with gdal_calc.py...");
 
 gdal_calc_py = gdal_calc_py.trim();
+console.log(gdal_calc_py + "\n");
+
 var output = Shell.exec(gdal_calc_py);
 
 if(output.stderr){
